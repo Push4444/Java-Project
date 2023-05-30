@@ -1,62 +1,31 @@
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
-public class GuessingGameGUI extends JFrame {
-    private int secretNumber;
-    private int attempts;
-    private JTextField textField;
-    private JLabel resultLabel;
+public class GuessingGame {
 
-    public GuessingGameGUI() {
-        setTitle("Guessing Game");
-        setSize(300, 200);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new FlowLayout());
+    public static void main(String[] args) {
+        int computerNumber = (int) (Math.random() * 100 + 1);
+        int userAnswer = 0;
+        System.out.println("The Correct guess would be: " + computerNumber);
 
-        // Generate the secret number
-        secretNumber = (int) (Math.random() * 100) + 1;
-        attempts = 0;
-
-        // Add a label and text field for user input
-        JLabel promptLabel = new JLabel("Guess a number between 1 and 100:");
-        textField = new JTextField(10);
-        textField.addActionListener(new GuessListener());
-        add(promptLabel);
-        add(textField);
-
-        // Add a label to display the result
-        resultLabel = new JLabel("");
-        add(resultLabel);
-
-        setVisible(true);
-    }
-
-    private class GuessListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            String text = textField.getText();
-            int guess = Integer.parseInt(text);
-            attempts++;
-
-            if (guess < secretNumber) {
-                resultLabel.setText("Too low! Try again.");
-            } else if (guess > secretNumber) {
-                resultLabel.setText("Too high! Try again.");
-            } else {
-                resultLabel.setText("Congratulations! You guessed the number in " + attempts + " attempts.");
-                textField.setEditable(false);
-            }
-
-            textField.setText("");
+        int count = 1;
+        while (userAnswer != computerNumber) {
+            String response = JOptionPane.showInputDialog(null, "Enter your Guess Number between 1 to 100", "Guessing game", 3);
+            userAnswer = Integer.parseInt(response);
+            JOptionPane.showMessageDialog(null, determineGuess(userAnswer, computerNumber, count));
+            count ++;
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new GuessingGameGUI();
-            }
-        });
+    public static String determineGuess(int userAnswer, int computerNumber, int count) {
+        if (userAnswer <= 0 || userAnswer > 100)
+            return "Your guess is wrong";
+        else if (userAnswer == computerNumber)
+            return "Correct Guess!! Total Guesses Count: " + count;
+        else if (userAnswer > computerNumber)
+            return "Your guess is too high!!\nTry Again: " + count;
+        else if (userAnswer < computerNumber)
+            return "Your guess is too low!!\nTry Again: " + count;
+        else
+            return "Your guess is incorrect \nTry Again: " + count;
     }
 }
